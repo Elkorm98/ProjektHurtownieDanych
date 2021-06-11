@@ -1,4 +1,5 @@
 from tkinter import *
+from numpy.core.fromnumeric import size
 import pandas as pd
 from tkinter import ttk, filedialog
 from moduls import file_open
@@ -7,6 +8,10 @@ from moduls import file_open
 root = Tk()
 root.title('Program do analizy baz danych')
 root.geometry("700x500")
+#
+title_label = Label(root,width="70", height= "1",text = '')
+title_label.pack(padx=20)
+
 
 #Miejsce do wyświetlania danych
 data_frame = Frame(root)
@@ -27,15 +32,13 @@ root.config(menu=my_menu)
 
 
 error_label = Label(root, text='')
-error_label.pack(pady=20)
+error_label.pack(pady  =20)
 
 
 #Stworzenie Menu "File"
 file_menu = Menu(my_menu, tearoff=False)
 my_menu.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="Open", command=lambda : file_open(error_label=error_label,data_tree=data_tree,tree_scrollY = tree_scrollY, tree_scrollX = tree_scrollX))
-
-
+file_menu.add_command(label="Open", command=lambda : file_open(error_label=error_label,data_tree=data_tree,tree_scrollY = tree_scrollY, tree_scrollX = tree_scrollX, title_label = title_label,s=s))
 
 
 

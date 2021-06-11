@@ -2,10 +2,10 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
 import pandas as pd 
-
+import os
 
 # Funkcja otiwerająca plik
-def file_open(error_label,data_tree,tree_scrollX,tree_scrollY):
+def file_open(error_label, data_tree, tree_scrollX, tree_scrollY, title_label,s):
 	filename = filedialog.askopenfilename(
 		initialdir="C:/gui/",
 		title = "Open A File",
@@ -37,4 +37,6 @@ def file_open(error_label,data_tree,tree_scrollX,tree_scrollY):
 
 	tree_scrollX.pack(side=BOTTOM, fill=X)
 	tree_scrollY.pack(side=RIGHT, fill=Y)
+	title_label.config(text = os.path.basename(filename))
 	data_tree.pack()
+	#return df
