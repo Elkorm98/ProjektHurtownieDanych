@@ -5,7 +5,7 @@ import pandas as pd
 import os
 
 # Funkcja otiwerająca plik
-def file_open(error_label, data_tree, tree_scrollX, tree_scrollY, title_label,s):
+def file_open(error_label, data_tree, tree_scrollX, tree_scrollY, title_label):
 	filename = filedialog.askopenfilename(
 		initialdir="C:/gui/",
 		title = "Open A File",

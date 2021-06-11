@@ -38,7 +38,7 @@ error_label.pack(pady  =20)
 #Stworzenie Menu "File"
 file_menu = Menu(my_menu, tearoff=False)
 my_menu.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="Open", command=lambda : file_open(error_label=error_label,data_tree=data_tree,tree_scrollY = tree_scrollY, tree_scrollX = tree_scrollX, title_label = title_label,s=s))
+file_menu.add_command(label="Open", command=lambda : file_open(error_label=error_label,data_tree=data_tree,tree_scrollY = tree_scrollY, tree_scrollX = tree_scrollX, title_label = title_label))
 
 
 
