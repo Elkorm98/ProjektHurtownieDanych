@@ -11,6 +11,8 @@ from matplotlib.figure import Figure
 import plotly.express as px
 from tkinter import simpledialog
 import plotly.io as pio
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
 
 
 df = pd.DataFrame()
@@ -96,17 +98,33 @@ def draw_hist(tabControl):
 			tabControl.pack(expand = 1, fill ="both")
 
 
-def draw_scatplot_2(tabControl,var_1,var_2):
+def draw_scatplot_2(tabControl,var_1,var_2,window):
+	global df
 	tab = ttk.Frame(tabControl)
 	figure = Figure(figsize=(6, 6))
 	ax = figure.subplots()
-	scat = px.scatter(x=df[var_1],y=df[var_2])
-	scat.show(renderer="iframe")
-	#canvas = FigureCanvasTkAgg(figure, master=tab)
-	#canvas.draw()
-	#canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
-	#tabControl.add(tab, text = i)
-	#tabControl.pack(expand = 1, fill ="both")
+	scat = sns.scatterplot(data = df, x = var_1, y = var_2, ax = ax)
+	canvas = FigureCanvasTkAgg(figure, master=tab)
+	canvas.draw()
+	canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+	tabControl.add(tab, text = "New Scater")
+	tabControl.pack(expand = 1, fill ="both")
+	window.destroy()
+
+
+def draw_scatplot_3(tabControl,var_1,var_2,var_3,window):
+	global df
+	tab = ttk.Frame(tabControl)
+	figure = plt.figure()
+	ax = figure.add_subplot(111, projection = "3d")
+	scat = sns.scatter(data = df, x = var_1, y = var_2,z = var_3, ax = ax)
+	canvas = FigureCanvasTkAgg(figure, master=tab)
+	canvas.draw()
+	canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+	tabControl.add(tab, text = "New Scater")
+	tabControl.pack(expand = 1, fill ="both")
+	window.destroy()
+
 	
 
 def chose_scatplot_2(tabControl):
@@ -123,6 +141,28 @@ def chose_scatplot_2(tabControl):
 	label_2.pack()
 	Lista_2 = ttk.Combobox(window, values = value)
 	Lista_2.pack()
-	button = Button(window,  text= "Ok", command= lambda: draw_scatplot_2(tabControl= tabControl,var_1 = Lista_1.get(), var_2 = Lista_2.get()))
+	button = Button(window,  text= "Ok", command= lambda: draw_scatplot_2(tabControl= tabControl,var_1 = Lista_1.get(), var_2 = Lista_2.get(),window = window))
+	button.pack()
+
+
+def chose_scatplot_3(tabControl):
+	global df
+	window = Toplevel()
+	value = []
+	for column in list(df.columns):
+		value.append(column)
+	label_1 = Label(window, text ="Wybierz pierwszą zmienną" )
+	label_1.pack()
+	Lista_1 = ttk.Combobox(window, values = value)
+	Lista_1.pack()
+	label_2 = Label(window, text ="Wybierz drugą zmienną" )
+	label_2.pack()
+	Lista_2 = ttk.Combobox(window, values = value)
+	Lista_2.pack()
+	label_3 = Label(window, text ="Wybierz trzecią zmienną" )
+	label_3.pack()
+	Lista_3 = ttk.Combobox(window, values = value)
+	Lista_3.pack()
+	button = Button(window,  text= "Ok", command= lambda: draw_scatplot_3(tabControl= tabControl,var_1 = Lista_1.get(), var_2 = Lista_2.get(), var_3 = Lista_3.get,window = window))
 	button.pack()
 		

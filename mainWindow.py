@@ -2,7 +2,7 @@ from tkinter import *
 from numpy.core.fromnumeric import size
 import pandas as pd
 from tkinter import ttk, filedialog
-from moduls import file_open, standard_stat , draw_hist, chose_scatplot_2
+from moduls import file_open, standard_stat , draw_hist, chose_scatplot_2, chose_scatplot_3
 import seaborn as sns
 import plotly.io as pio
 
@@ -74,7 +74,7 @@ plot_menu.add_command(label="Histogram", command = lambda : draw_hist(tabControl
 scat_plot_menu=Menu(plot_menu, tearoff = False)
 plot_menu.add_cascade(label = "Wykres zależności", menu = scat_plot_menu)
 scat_plot_menu.add_command(label="dla 2 zmiennych",command = lambda : chose_scatplot_2(tabControl = tabControl))
-scat_plot_menu.add_command(label="dla 3 zmiennych")
+scat_plot_menu.add_command(label="dla 3 zmiennych",command = lambda : chose_scatplot_3(tabControl = tabControl))
 
 
 
