@@ -8,10 +8,10 @@ import seaborn as sns
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
-import plotly.express as px
-from tkinter import simpledialog
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
+# import plotly.express as px
+# from tkinter import simpledialog
+# from mpl_toolkits.mplot3d import Axes3D
+# import matplotlib.pyplot as plt
 
 
 df = pd.DataFrame()
@@ -394,6 +394,8 @@ def chose_filtr(data_tree):
 		label_1.pack()
 		Lista_1 = ttk.Combobox(window, values = value)
 		Lista_1.pack()
+		label_2=Label(window,text="Filtrowana wartość")
+		label_2.pack()
 		entry = Text(window, width = 10, height = 1)
 		entry.pack()
 		button = Button(window,  text = "Ok", command = lambda : filtrowanie(var = Lista_1.get(), val = entry.get("1.0","end-1c"), window = window,data_tree = data_tree))
