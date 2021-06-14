@@ -36,7 +36,7 @@ def file_open(error_label, data_tree, tree_scrollX, tree_scrollY, title_label):
 		except ValueError:
 			error_label.config(text="Nie udało się otworzyć pliku!")
 		except FileNotFoundError:
-			error_label.config(text="PLik nie istnieje!")
+			error_label.config(text="Plik nie istnieje!")
 
 	data_tree.delete(*data_tree.get_children())
 
@@ -518,3 +518,22 @@ def dodaj_kolumne(tytul, skalar_1, zmienna_1, dzialania, skalar_2, zmienna_2, wy
 		data_tree.insert("", "end", values=row)
 
 	data_tree.pack()
+
+
+def zapisz():
+	global df
+	if df.empty:
+		messagebox.showerror("Brak danych do zapisu", "Brak danych do zapisu!")
+	else:
+		filename = filedialog.asksaveasfilename(
+			initialdir="C:/gui/",
+			title = "Save A File",
+			filetype=(("csv files", "*.csv"), ("All Files", "*.*")))
+		if filename:
+			try:
+				filename = r"{}".format(filename)
+				df.to_csv(filename, index = False)
+			except ValueError:
+				error_label.config(text="Nie udało się zapisać pliku!")
+			except FileNotFoundError:
+				error_label.config(text="Plik nie istnieje!")

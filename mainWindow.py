@@ -3,7 +3,7 @@ from numpy.core.fromnumeric import size
 import pandas as pd
 from tkinter import ttk, filedialog
 
-from moduls import file_open, standard_stat , chose_hist, chose_scatplot_2, chose_scatplot_3, chose_grupowanie, connection_open, cofnij, chose_filtr, chose_kolumne
+from moduls import file_open, standard_stat , chose_hist, chose_scatplot_2, chose_scatplot_3, chose_grupowanie, connection_open, cofnij, chose_filtr, chose_kolumne, zapisz
 import seaborn as sns
 
 #Podstawowe ustawienia
@@ -57,6 +57,7 @@ error_label.pack(pady  =20)
 file_menu = Menu(my_menu, tearoff=False)
 my_menu.add_cascade(label="Plik", menu=file_menu)
 file_menu.add_command(label="Otwórz plik", command=lambda : file_open(error_label=error_label,data_tree=data_tree,tree_scrollY = data_tree_scrollY, tree_scrollX = data_tree_scrollX, title_label = title_label))
+file_menu.add_command(label = "Zapisz", command = lambda : zapisz())
 file_menu.add_command(label = "Cofnij", command = lambda : cofnij(data_tree = data_tree))
 file_menu.add_command(label = "Wyjdź", command = lambda : root.destroy())
 #Stworzenie Menu "Podstawowe statystyki"
