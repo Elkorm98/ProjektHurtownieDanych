@@ -10,7 +10,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 import plotly.express as px
 from tkinter import simpledialog
-import plotly.io as pio
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
@@ -58,8 +57,15 @@ def file_open(error_label, data_tree, tree_scrollX, tree_scrollY, title_label):
 
 
 
-def standard_stat(stat_tree,tree_scrollX, tree_scrollY, tabControl):
+def standard_stat(stat_frame, tabControl):
 	global df
+	tab = ttk.Frame(tabControl, height = 100)
+	stat_tree_scrollY = Scrollbar(tab)
+	stat_tree_scrollX = Scrollbar(tab,orient = 'horizontal')
+	stat_tree = ttk.Treeview(tab, xscrollcommand = stat_tree_scrollX.set, yscrollcommand = stat_tree_scrollY.set)
+	stat_tree_scrollY.config(command=stat_tree.yview)
+	stat_tree_scrollX.config(command=stat_tree.xview)
+
 	if df.empty:
 		messagebox.showerror("Brak Danych", "Brakuje do analizy!")
 	else:
@@ -77,60 +83,80 @@ def standard_stat(stat_tree,tree_scrollX, tree_scrollY, tabControl):
 
 		for row in d_rows:
 			stat_tree.insert("", "end", values=row)
-		
+	
 
-		tree_scrollX.pack(side=BOTTOM, fill=X)
-		tree_scrollY.pack(side=RIGHT, fill=Y)
+		stat_tree_scrollX.pack(side=BOTTOM, fill=X)
+		stat_tree_scrollY.pack(side=RIGHT, fill=Y)
 		stat_tree.pack()
-		tabControl.add(stat_tree, text = "Podstawowe statystyki")
-		tabControl.pack(expand = 1, fill ="both")
+		tabControl.add(tab, text = "Podstawowe statystyki")
+		tabControl.pack()
 
 
 
-def draw_hist(tabControl):
+def draw_hist(tabControl,window, var):
+	global df
+	window.destroy()
+	tab = ttk.Frame(tabControl)
+	figure = Figure(figsize=(10, 10))
+	ax = figure.subplots()
+	hist = sns.histplot(df[var],ax = ax)
+	canvas = FigureCanvasTkAgg(figure, master=tab)
+	canvas.draw()
+	canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+	tabControl.add(tab, text = var)
+	tabControl.pack()
+
+
+def chose_hist(tabControl):
 	global df
 	if df.empty:
-		messagebox.showerror("Brak Danych", "Brakuje do analizy!")
+    		messagebox.showerror("Brak Danych", "Brakuje do analizy!")
 	else:
-		for i in df.columns:
-			tab = ttk.Frame(tabControl)
-			figure = Figure(figsize=(6, 6))
-			ax = figure.subplots()
-			hist = sns.histplot(df[i],ax = ax)
-			canvas = FigureCanvasTkAgg(figure, master=tab)
-			canvas.draw()
-			canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
-			tabControl.add(tab, text = i)
-			tabControl.pack(expand = 1, fill ="both")
+		window = Toplevel()
+		value = []
+		for column in list(df.columns):
+			value.append(column)
+		label_1 = Label(window, text ="Wybierz zmienną dla której ma zostać wygenerowany histpgram" )
+		label_1.pack()
+		Lista_1 = ttk.Combobox(window, values = value)
+		Lista_1.pack()
+		button = Button(window,  text = "Ok", command= lambda: draw_hist(tabControl= tabControl,var = Lista_1.get(), window = window))
+		button.pack()
 
 
 def draw_scatplot_2(tabControl,var_1,var_2,window):
 	global df
-	tab = ttk.Frame(tabControl)
+	tab = ttk.Frame(tabControl, height = 100)
 	figure = Figure(figsize=(6, 6))
 	ax = figure.subplots()
 	scat = sns.scatterplot(data = df, x = var_1, y = var_2, ax = ax)
+	ax.set_title("Wykres Zależności")
 	canvas = FigureCanvasTkAgg(figure, master=tab)
 	canvas.draw()
-	canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
-	tabControl.add(tab, text = "New Scater")
-	tabControl.pack(expand = 1, fill ="both")
+	canvas.get_tk_widget().pack()
+	tabControl.add(tab, text = "Scatter " + var_1 + "x" + var_2)
+	tabControl.pack()
 	window.destroy()
 
 
 def draw_scatplot_3(tabControl,var_1,var_2,var_3,window):
 	global df
-	tab = ttk.Frame(tabControl)
+	tab = ttk.Frame(tabControl, height = 100)
 	figure = Figure(figsize=(5, 4), dpi=100)
 	ax = figure.add_subplot(111, projection="3d")
 	ax.scatter(df[var_1], df[var_2], df[var_3])
-	
+
+	ax.set_title("Wykres zależności")
+	ax.set_xlabel(var_1)
+	ax.set_ylabel(var_2)
+	ax.set_zlabel(var_3)
+
 	canvas = FigureCanvasTkAgg(figure, master=tab)
 	canvas.draw()
-	canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+	canvas.get_tk_widget().pack()
 	toolbar = NavigationToolbar2Tk(canvas, tab)
-	tabControl.add(tab, text = "New Scater")
-	tabControl.pack(expand = 1, fill ="both")
+	tabControl.add(tab, text = "Catter "+ var_1 +"x" + var_2 + "x" + var_3)
+	tabControl.pack()
 	toolbar.update()
 	window.destroy()
 
@@ -138,48 +164,59 @@ def draw_scatplot_3(tabControl,var_1,var_2,var_3,window):
 
 def chose_scatplot_2(tabControl):
 	global df
-	window = Toplevel()
-	value = []
-	for column in list(df.columns):
-		value.append(column)
-	label_1 = Label(window, text ="Wybierz pierwszą zmienną" )
-	label_1.pack()
-	Lista_1 = ttk.Combobox(window, values = value)
-	Lista_1.pack()
-	label_2 = Label(window, text ="Wybierz drugą zmienną" )
-	label_2.pack()
-	Lista_2 = ttk.Combobox(window, values = value)
-	Lista_2.pack()
-	button = Button(window,  text= "Ok", command= lambda: draw_scatplot_2(tabControl= tabControl,var_1 = Lista_1.get(), var_2 = Lista_2.get(),window = window))
-	button.pack()
+	if df.empty:
+    		messagebox.showerror("Brak Danych", "Brakuje do analizy!")
+	else:
+		window = Toplevel()
+		value = []
+		for column in list(df.columns):
+			value.append(column)
+		label_1 = Label(window, text ="Wybierz pierwszą zmienną" )
+		label_1.pack()
+		Lista_1 = ttk.Combobox(window, values = value)
+		Lista_1.pack()
+		label_2 = Label(window, text ="Wybierz drugą zmienną" )
+		label_2.pack()
+		Lista_2 = ttk.Combobox(window, values = value)
+		Lista_2.pack()
+		button = Button(window,  text= "Ok", command= lambda: draw_scatplot_2(tabControl= tabControl,var_1 = Lista_1.get(), var_2 = Lista_2.get(),window = window))
+		button.pack()
 
 
 def chose_scatplot_3(tabControl):
 	global df
-	window = Toplevel()
-	value = []
-	for column in list(df.columns):
-		value.append(column)
-	label_1 = Label(window, text ="Wybierz pierwszą zmienną" )
-	label_1.pack()
-	Lista_1 = ttk.Combobox(window, values = value)
-	Lista_1.pack()
-	label_2 = Label(window, text ="Wybierz drugą zmienną" )
-	label_2.pack()
-	Lista_2 = ttk.Combobox(window, values = value)
-	Lista_2.pack()
-	label_3 = Label(window, text ="Wybierz trzecią zmienną" )
-	label_3.pack()
-	Lista_3 = ttk.Combobox(window, values = value)
-	Lista_3.pack()
-	button = Button(window,  text= "Ok", command= lambda: draw_scatplot_3(tabControl= tabControl,var_1 = Lista_1.get(), var_2 = Lista_2.get(), var_3 = Lista_3.get(),window = window))
-	button.pack()
+	if df.empty:
+    		messagebox.showerror("Brak Danych", "Brakuje do analizy!")
+	else:
+		window = Toplevel()
+		value = []
+		for column in list(df.columns):
+			value.append(column)
+		label_1 = Label(window, text ="Wybierz pierwszą zmienną" )
+		label_1.pack()
+		Lista_1 = ttk.Combobox(window, values = value)
+		Lista_1.pack()
+		label_2 = Label(window, text ="Wybierz drugą zmienną" )
+		label_2.pack()
+		Lista_2 = ttk.Combobox(window, values = value)
+		Lista_2.pack()
+		label_3 = Label(window, text ="Wybierz trzecią zmienną" )
+		label_3.pack()
+		Lista_3 = ttk.Combobox(window, values = value)
+		Lista_3.pack()
+		button = Button(window,  text= "Ok", command= lambda: draw_scatplot_3(tabControl= tabControl,var_1 = Lista_1.get(), var_2 = Lista_2.get(), var_3 = Lista_3.get(),window = window))
+		button.pack()
 
 
-def grupowanie(tabControl,var_wyswietlana, var_grupowana, window):
+def grupowanie(stat_frame,tabControl,var_wyswietlana, var_grupowana, window):
 	global df
-	tab = ttk.Frame(tabControl)
-	stat_tree = ttk.Treeview(tab)
+	tab = ttk.Frame(tabControl, height = 100)
+	stat_tree_scrollY = Scrollbar(tab)
+	stat_tree_scrollX = Scrollbar(tab,orient = 'horizontal')
+	stat_tree = ttk.Treeview(tab, xscrollcommand = stat_tree_scrollX.set, yscrollcommand = stat_tree_scrollY.set)
+	stat_tree_scrollY.config(command=stat_tree.yview)
+	stat_tree_scrollX.config(command=stat_tree.xview)
+	
 	d = df.groupby(var_grupowana).describe()[var_wyswietlana]
 	d.insert(0,"Grupa",d.index,True)
 	stat_tree.delete(*stat_tree.get_children())
@@ -196,11 +233,12 @@ def grupowanie(tabControl,var_wyswietlana, var_grupowana, window):
 		stat_tree.insert("", "end", values=row)
 	stat_tree.pack()
 	tabControl.add(tab, text = var_grupowana + " x " + var_wyswietlana)
-	tabControl.pack(expand = 1, fill ="both")
+	tabControl.pack()
 	window.destroy()
+	stat_tree_scrollX.pack(side=BOTTOM, fill=X)
+	stat_tree_scrollY.pack(side=RIGHT, fill=Y)
 
-
-def chose_wyswietlana(var_1,window,tabControl):
+def chose_wyswietlana(stat_frame,var_1,window,tabControl):
 	window.destroy()
 	global df
 	window = Toplevel()
@@ -208,33 +246,36 @@ def chose_wyswietlana(var_1,window,tabControl):
 	for column in list(df.columns):
 		value.append(column)
 	value.remove(var_1)
-	label_1 = Label(window, text ="Wybierz zmienną do grupowania" )
+	label_1 = Label(window, text ="Wybierz zmienną której podsumowanie chcesz wyświetlić" )
 	label_1.pack()
 	Lista_1 = ttk.Combobox(window, values = value)
 	Lista_1.pack()
-	button = Button(window,  text = "Ok", command= lambda: grupowanie(tabControl= tabControl,var_wyswietlana = Lista_1.get(),var_grupowana = var_1, window = window))
+	button = Button(window,  text = "Ok", command= lambda: grupowanie(stat_frame = stat_frame,tabControl= tabControl,var_wyswietlana = Lista_1.get(),var_grupowana = var_1, window = window))
 	button.pack()
 
 
-def sprawdz(var_1, window, tabControl):
+def sprawdz(stat_frame,var_1, window, tabControl):
 	global df
 	x = df[var_1].unique().size
 	if x <= 10:
-		chose_wyswietlana(var_1 = var_1, window = window, tabControl = tabControl)
+		chose_wyswietlana(stat_frame = stat_frame,var_1 = var_1, window = window, tabControl = tabControl)
 	else:
 		messagebox.showerror("Zbyt duża liczba grup", "Zbyt duża liczba grup (max : 10)")
 		window.destroy()
 
 
-def chose_grupowanie(tabControl):
+def chose_grupowanie(tabControl,stat_frame):
 	global df
-	window = Toplevel()
-	value = []
-	for column in list(df.columns):
-		value.append(column)
-	label_1 = Label(window, text ="Wybierz zmienną do grupowania" )
-	label_1.pack()
-	Lista_1 = ttk.Combobox(window, values = value)
-	Lista_1.pack()
-	button = Button(window,  text = "Ok", command = lambda : sprawdz(var_1 = Lista_1.get(), window = window, tabControl= tabControl))
-	button.pack()
+	if df.empty:
+    		messagebox.showerror("Brak Danych", "Brakuje do analizy!")
+	else:
+		window = Toplevel()
+		value = []
+		for column in list(df.columns):
+			value.append(column)
+		label_1 = Label(window, text ="Wybierz zmienną do grupowania" )
+		label_1.pack()
+		Lista_1 = ttk.Combobox(window, values = value)
+		Lista_1.pack()
+		button = Button(window,  text = "Ok", command = lambda : sprawdz(var_1 = Lista_1.get(), window = window, tabControl= tabControl, stat_frame= stat_frame))
+		button.pack()
