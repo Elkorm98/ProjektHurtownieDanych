@@ -32,7 +32,7 @@ def file_open(error_label, data_tree, tree_scrollX, tree_scrollY, title_label):
 	if filename:
 		try:
 			filename = r"{}".format(filename)
-			df = pd.read_csv(filename)
+			df = pd.read_csv(filename, na_filter= False)
 		except ValueError:
 			error_label.config(text="Nie udało się otworzyć pliku!")
 		except FileNotFoundError:
@@ -394,7 +394,7 @@ def chose_filtr(data_tree):
 		label_1.pack()
 		Lista_1 = ttk.Combobox(window, values = value)
 		Lista_1.pack()
-		entry = Text(window, width = 5, height = 1)
+		entry = Text(window, width = 10, height = 1)
 		entry.pack()
 		button = Button(window,  text = "Ok", command = lambda : filtrowanie(var = Lista_1.get(), val = entry.get("1.0","end-1c"), window = window,data_tree = data_tree))
 		button.pack()
@@ -439,12 +439,12 @@ def chose_kolumne(data_tree):
 
 		label_7 = Label(window, text ="Wybierz nazwę nowej kolumny")
 		label_7.pack()
-		entry_7 = Text(window,width = 5, height = 1)
+		entry_7 = Text(window,width = 10, height = 1)
 		entry_7.pack()
 
 		label_1 = Label(window, text ="Wybierz skalar do pierwszej zmmiennej" )
 		label_1.pack()
-		entry_1 = Text(window,width = 5, height = 1)
+		entry_1 = Text(window,width = 10, height = 1)
 		entry_1.pack()
 
 		label_2 = Label(window, text ="Wybierz pierwszą zmienną" )
@@ -459,7 +459,7 @@ def chose_kolumne(data_tree):
 
 		label_4 = Label(window, text ="Wybierz skalar do drugiej zmmiennej")
 		label_4.pack()
-		entry_4 = Text(window,width = 5, height = 1)
+		entry_4 = Text(window,width = 10, height = 1)
 		entry_4.pack()
 
 		label_5 = Label(window, text ="Wybierz drugą zmienną" )
@@ -469,7 +469,7 @@ def chose_kolumne(data_tree):
 
 		label_6 = Label(window, text ="Wybierz wyraz wolny")
 		label_6.pack()
-		entry_6 = Text(window,width = 5, height = 1)
+		entry_6 = Text(window,width = 10, height = 1)
 		entry_6.pack()
 
 		label_8 = Label(window, text ="Wybierz typ kolumny" )
