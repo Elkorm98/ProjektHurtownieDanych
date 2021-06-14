@@ -32,7 +32,7 @@ def file_open(error_label, data_tree, tree_scrollX, tree_scrollY, title_label):
 	if filename:
 		try:
 			filename = r"{}".format(filename)
-			df = pd.read_csv(filename, na_filter= False)
+			df = pd.read_csv(filename)
 		except ValueError:
 			error_label.config(text="Nie udało się otworzyć pliku!")
 		except FileNotFoundError:
