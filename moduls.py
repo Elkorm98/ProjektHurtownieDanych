@@ -10,7 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 # import plotly.express as px
 # from tkinter import simpledialog
-# from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import Axes3D
 # import matplotlib.pyplot as plt
 
 
@@ -502,9 +502,9 @@ def dodaj_kolumne(tytul, skalar_1, zmienna_1, dzialania, skalar_2, zmienna_2, wy
 	elif typy == "Integer":
 		df[tytul] = df.apply(
 		lambda x:
-		int(x[zmienna_1] * float(skalar_1) + x[zmienna_2] * float(skalar_2) + float(wyraz_wolny)) if dzialania =="+" else 
-		int(x[zmienna_1] * float(skalar_1) - x[zmienna_2] * float(skalar_2) + float(wyraz_wolny)) if dzialania =="-" else 
-		int(x[zmienna_1] * float(skalar_1) * x[zmienna_2] * float(skalar_2) + float(wyraz_wolny)) if dzialania =="*" else	
+		round(x[zmienna_1] * float(skalar_1) + x[zmienna_2] * float(skalar_2) + float(wyraz_wolny),0) if dzialania =="+" else 
+		round(x[zmienna_1] * float(skalar_1) - x[zmienna_2] * float(skalar_2) + float(wyraz_wolny),0) if dzialania =="-" else 
+		round(x[zmienna_1] * float(skalar_1) * x[zmienna_2] * float(skalar_2) + float(wyraz_wolny),0) if dzialania =="*" else	
 		np.nan, axis = 1)
 	data_tree.delete(*data_tree.get_children())
 
